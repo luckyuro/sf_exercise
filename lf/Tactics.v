@@ -417,8 +417,8 @@ Proof.
     { simpl. intros H'. inversion H'. }
   - destruct m.
     { intros H. inversion H. }
-    { intros H. apply 
-    
+    { intros H. rewrite<-plus_n_Sm in H. rewrite<-plus_n_Sm in H. inversion H. apply IHn' in H1. rewrite->H1. reflexivity. }
+Qed.    
 (** [] *)
 
 (* ################################################################# *)
@@ -574,7 +574,15 @@ Proof.
 Theorem beq_nat_true : forall n m,
     beq_nat n m = true -> n = m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n. induction n as [|n'].
+  - destruct m as [|m'].
+    + reflexivity.
+    + intros H. inversion H.
+  - destruct m as [|m'].
+    + intros H. inversion H.
+    + intros H. apply f_equal. apply IHn'. simpl in H. apply H.
+Qed.
+(* FILL IN HERE *)
 (** [] *)
 
 (** **** Exercise: 2 stars, advanced (beq_nat_true_informal)  *)
@@ -699,7 +707,12 @@ Theorem nth_error_after_last: forall (n : nat) (X : Type) (l : list X),
      length l = n ->
      nth_error l n = None.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n t l H. generalize dependent n. induction l as [|l'].
+  - reflexivity.
+  - simpl. intros n H. destruct n.
+    + simpl. inversion H.
+    + simpl. apply IHl. inversion H. reflexivity.
+Qed.  
 (** [] *)
 
 (* ################################################################# *)
@@ -882,6 +895,9 @@ Theorem combine_split : forall X Y (l : list (X * Y)) l1 l2,
   split l = (l1, l2) ->
   combine l1 l2 = l.
 Proof.
+  intros X Y l l1 l2. induction l as [| [x y] l'].
+  - simpl. intros H. inversion H. simpl. reflexivity.
+  - intros H. 
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
